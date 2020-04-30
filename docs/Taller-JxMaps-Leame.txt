@@ -1,0 +1,37 @@
+Taller desarrollado por Juan Pablo Cano y Fernando De la Rosa
+Nov 2019
+Actualizacion Abril 2020
+
+1. Hacer fork (sacar copia independiente) del repositorio 
+https://github.com/fdelaros/Taller_JxMaps.git
+en su cuenta personal Github
+Este es un proyecto Eclipse/Java que funciona en la version 1.8 o 8 de Java
+
+2. Clonar el repositorio en su computador
+
+3. Cargar el proyecto Taller_JxMaps en Eclipse
+
+4. Crear el directorio lib en el proyecto Taller_JxMaps
+En Eclipse el directorio lib se crea como Folder
+
+5. Descargar el API JxMaps (plataforma Windows, Mac o Linux) del sitio Web https://www.teamdev.com/jxmaps
+La descarga (archivo .zip) se puede hacer en un directorio diferente al proyecto Eclipse Taller_JxMaps
+Descomprimir el archivo del API JxMaps
+
+Nota: NO requiere hacer la solicitud de la licencia de prueba del API
+
+6. Copiar las librerias de una misma version de JxMaps en la carpeta lib del proyecto Taller_JxMaps.
+Como ilustracion se muestran las librerias de la version 1.3.2 de JxMaps.
+JxMaps API: jxmaps-1.3.2.jar
+JxMaps Sistema Operativo: jxmaps-win-1.3.2.jar (Windows) o jxmaps-mac-1.3.2.jar (Mac) o jxmaps-linuxXX-1.3.2.jar (Linux)
+JxMaps demo: jxmapsdemo.jar
+
+Importante: Al usar la libreria JxMaps demo, NO se requiere la licencia de prueba de JxMaps (license.jar)
+
+7. Configurar las tres librerias en Properties del proyecto Eclipse/Java >> Java Build Path >> Libraries >> Add JARS ...
+
+8. Configurar el proyecto Eclipse bajo Java 8. Properties del proyecto Eclipse/Java >> Java Compiler >> Habilitar Java 8
+
+9. Ejecutar la aplicacion Java desde la clase Main.java
+
+Si todo funciona bien debe desplegarse una ventana con un mapa de Bogotá y unos elementos gráficos superpuestos al mapa.
