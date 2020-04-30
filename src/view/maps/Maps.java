@@ -29,7 +29,7 @@ public class Maps extends MapView {
 	private String idRequerimiento;
 	
 	//Coordenadas del camino a mostrar (secuencia de localizaciones (Lat, Long))
-	private LatLng[] locations = {new LatLng(4.6285797,-74.0649341), new LatLng(4.608550, -74.076443), new LatLng(4.601363, -74.0661), new LatLng(4.5954979,-74.068708) }; //Coordenadas de los vertices inicio, intermedio y fin.		
+	private LatLng[] locations = {new LatLng(4.6285797,-74.0649341), new LatLng(4.608550, -74.076443), new LatLng(4.601363, -74.0661), new LatLng(4.5954979,-74.068708)}; //Coordenadas de los vertices inicio, intermedio y fin.		
 
 	/**
 	 * Visualizacion Google map con camino, marcas, circulos y texto de localizacion
