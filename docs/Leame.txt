@@ -1,0 +1,21 @@
+Taller desarrollado por Juan Pablo Cano y Fernando De la Rosa
+Nov 2019
+
+1. Descargar el API JxMaps (plataforma Windows, Mac o Linux) del sitio Web https://www.teamdev.com/jxmaps
+Nota: NO requiere hacer la solicitud de la licencia de prueba del API
+
+2. Copiar las librerias de una misma version de JxMaps en la carpeta lib del proyecto.
+Como ilustracion se muestran las librerias de la version 1.3.2 de JxMaps.
+JxMaps API: jxmaps-1.3.2.jar
+JxMaps Sistema Operativo: jxmaps-win-1.3.2.jar (Windows) o jxmaps-mac-1.3.2.jar (Mac) o jxmaps-linuxXX-1.3.2.jar (Linux)
+JxMaps demo: jxmapsdemo-1.3.2.jar
+
+Importante: Al usar la libreria JxMaps demo, NO se requiere la licencia de prueba de JxMaps (license.jar)
+
+3. Configurar las tres librerias en Properties del proyecto Eclipse/Java >> Java Build Path >> Libraries >> Add JARS ...
+
+4. Configurar el proyecto bajo Java 8. Properties del proyecto Eclipse/Java >> Java Compiler >> Habilitar Java 8
+
+5. Ejecutar la aplicacion Java desde la clase Main.java
+
+Si todo funciona bien debe desplegarse una ventana con un mapa de Bogotá y unos elementos gráficos superpuestos al mapa.
