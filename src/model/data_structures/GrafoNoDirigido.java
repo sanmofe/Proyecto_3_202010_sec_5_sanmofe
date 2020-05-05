@@ -2,18 +2,32 @@ package model.data_structures;
 
 import java.util.ArrayList;
 
+import model.data_structures.HTLPGraphs;
+import model.data_structures.Vertice;
+import model.data_structures.Grafos.Queue;
+
 public class GrafoNoDirigido<K> {
 
-	public GrafoNoDirigido(int n){
-		//TODO
+	private int numVertices;
+	
+	private int numArcos;
+	
+	private HTLPGraphs vertices;
+	
+	private int lol;
+	
+	public GrafoNoDirigido(int n) {
+		numVertices = n;
+		vertices = new HTLPGraphs(n);
+		lol = 0;
 	}
 	
 	public int V(){ //VÉRTICES
-		return 0;
+		return numVertices;
 	}
 	
 	public int E(){ //ARCOS
-		return 0;
+		return numArcos;
 	}
 	
 	public void addEdge(K idVertexIni, K idVertexFin, double cost){
@@ -41,23 +55,87 @@ public class GrafoNoDirigido<K> {
 	}
 
 	public Iterable <K> adj (K idVertex){
-		return new ArrayList<K>(); //TODO Hay que cambiar esto o nos pegan xd 
+		Queue cola = new Queue<>();
+		for(Vertice vertice : vertices.darData())
+		{
+			if(vertice!=null)
+			{
+				cola.agregar(vertice);
+			}
+		}
+		Vertice[] vARetornar = new Vertice[cola.size()];
+		for(int i = 0; i<cola.size(); i++)
+		{
+			
+			vARetornar[i] = (Vertice) cola.dequeue();
+		}
+		return vARetornar;
 	}
 	
 	public void uncheck(){
 		
 	}
 	
-	public void dfs(K s){
-		
-	}
 	
 	public int cc(){
-		return (int) Math.round(Math.random()*1000); //B)
+		Vertice todos[] = vertices.darData();
+		int cantidad = 0;
+		int cc = 1;
+		for(Vertice v : todos)
+		{
+			if(v!=null)
+			{
+				if(!v.isMarked())
+				{
+					cantidad++;
+					DepthFirstSearch(v.darId(),cc);
+					cc++;
+				}
+			}
+			
+			
+		}
+		uncheck();
+		return cantidad;
 	}
 	
 	public Iterable<K> getCC(K idVertex){
 		return new ArrayList<K>(); //TODO Hay que cambiar esto o nos pegan x2 xd
 	}
 
+	public void DepthFirstSearch(int vID, int cc)   
+	{        
+		
+		int i = 0, b = 0;
+		
+		i = dfs(vID, cc, b);
+	}   
+
+	private Vertice getVertex(int id)
+	{
+		return (Vertice) vertices.get((int) id);
+	}
+	
+	private int dfs(int vID, int cc, int pCantMarcada)   
+	{      
+		int cantMarcada = pCantMarcada;
+		Vertice actual = getVertex(vID);
+		actual.marcar(); 
+		actual.setComponenteConectada(cc);
+		cantMarcada++;   
+		
+		int[] aExplorar = actual.adj();
+		for (int w : aExplorar)
+		{
+			
+			Vertice adyActual = (Vertice) vertices.get(w);
+			if (!adyActual.isMarked())
+			{
+				cantMarcada=dfs(w, cc, cantMarcada); 
+				
+			}
+		}
+		return cantMarcada;
+
+	}
 }
