@@ -10,7 +10,7 @@ import java.util.Iterator;
  * @author Fernando De la Rosa
  *
  */
-public class ArregloDinamico<T> implements IArregloDinamico<T>, Iterable<T> {
+public class ArregloDinamico<T> implements IArregloDinamico<T>, Iterable<T>{
 		/**
 		 * Capacidad maxima del arreglo
 		 */

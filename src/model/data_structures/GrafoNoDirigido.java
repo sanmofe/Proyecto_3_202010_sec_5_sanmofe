@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import model.data_structures.HTLPGraphs;
 import model.data_structures.Vertice;
-import model.data_structures.Grafos.Queue;
 
-public class GrafoNoDirigido<K> {
+public class GrafoNoDirigido<K, V> {
 
 	private int numVertices;
 	
@@ -42,15 +41,19 @@ public class GrafoNoDirigido<K> {
 		
 	}
 	
-	public double getCostArc(K idVertexIni, K idVertexFin){
-		return 0;
+	public double getCostArc(int idVertexIni, int idVertexFin){
+		Vertice ini = (Vertice) vertices.get(idVertexIni);
+		return ini.darPeso(idVertexFin);
 	}
 
-	public void setCostArc(K idVertexIni,K idVertexFin, double cost){
-		
+	public void setCostArc(int idVertexIni, int idVertexFin, double cost){
+		Vertice ini = (Vertice) vertices.get(idVertexIni);
+		Vertice fin =  (Vertice) vertices.get(idVertexFin);
+		ini.setPesoArco(idVertexFin, cost);
+		fin.setPesoArco(idVertexIni, cost);
 	}
 	
-	public void addVertex(K idVertex, V infoVertex){
+	public void addVertex(K idVertex, Double lat, Double lon){
 		
 	}
 
@@ -63,13 +66,16 @@ public class GrafoNoDirigido<K> {
 				cola.agregar(vertice);
 			}
 		}
-		Vertice[] vARetornar = new Vertice[cola.size()];
-		for(int i = 0; i<cola.size(); i++)
-		{
-			
-			vARetornar[i] = (Vertice) cola.dequeue();
+		Vertice[] vARetornar = new Vertice[cola.darLongitud()];
+		for(int i = 0; i<cola.darLongitud(); i++)
+		{	
+			vARetornar[i] = (Vertice) cola.eliminarUltimo();
 		}
-		return vARetornar;
+		ArregloDinamico<Vertice> arreglo = new ArregloDinamico<>(3);
+		for (Vertice vertice : vARetornar) {
+			arreglo.agregar(vertice);
+		}
+		return (Iterable<K>) arreglo;
 	}
 	
 	public void uncheck(){
