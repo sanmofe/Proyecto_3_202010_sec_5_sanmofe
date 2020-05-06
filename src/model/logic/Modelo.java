@@ -111,7 +111,7 @@ public class Modelo {
 
 					int idAdyacente = Integer.parseInt(datosR[i]);
 				}
-				//AQUI SE AGREGAN LOS ADYACENTES AL OTRO
+				//AQUI SE AGREGAN los cosos al otro.
 			}
 			br.close();
 		}
