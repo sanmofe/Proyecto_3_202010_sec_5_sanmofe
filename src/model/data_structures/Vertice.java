@@ -3,33 +3,30 @@ package model.data_structures;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Vertice
+public class Vertice implements Comparable<Vertice>
 {
 	private LinkedList<Arco> edgeTo;
 	private int id;
 	private double lon;
 	private double lat;
-	private int MOVEMENT_ID;
 	private boolean marked;
 	private int componenteConectada;
 	
 
-	public Vertice(int pId, double plon, double plat, int mov_id)
+	public Vertice(int pId, double plon, double plat)
 	{
 		lon = plon;
 		lat = plat;
-		MOVEMENT_ID = mov_id;
 		marked = false;
 		id = pId;
 		edgeTo = new LinkedList<>();
 		componenteConectada = -1;
 	}
 	
-	public Vertice(int pId, double plon, double plat, int mov_id, boolean pMarked, LinkedList pEdge)
+	public Vertice(int pId, double plon, double plat, boolean pMarked, LinkedList pEdge)
 	{
 		lon = plon;
 		lat = plat;
-		MOVEMENT_ID = mov_id;
 		marked = pMarked;
 		id = pId;
 		edgeTo = pEdge;
@@ -49,9 +46,9 @@ public class Vertice
 		return componenteConectada;
 	}
 	
-	public void anadirArco(int pVId, double pDistancia, double pTiempo)
+	public void anadirArco(int pVId, double pPeso)
 	{
-		Arco arco = new Arco(id, pVId, pDistancia, pTiempo,false);
+		Arco arco = new Arco(id, pVId, pPeso ,false);
 		edgeTo.add(arco);
 	}
 	public void eliminarArco(int pVId)
@@ -70,44 +67,24 @@ public class Vertice
 	{
 		return lat;
 	}
-	public int darMOVEMENT_ID()
+
+	public double darPeso(int pVId)
 	{
-		return MOVEMENT_ID;
-	}
-	public double darPesoDistancia(int pVId)
-	{
-		return (double) buscarArcoA(pVId).darDistancia();
-	}
-	public double darPesoTiempo(int pVId)
-	{
-		return (double) buscarArcoA(pVId).darTiempo();
-	}
-	public double darPesoVelocidad(int pVId)
-	{
-		return (double) buscarArcoA(pVId).darVelocidad();
+		return (double) buscarArcoA(pVId).darPeso();
 	}
 	
-	public void setInfo(int pId, double plon, double plat, int pMovId)
+	public void setInfo(int pId, double plon, double plat)
 	{
 		id = pId;
 		lon = plon;
 		lat = plat;
-		MOVEMENT_ID = pMovId;
 	}
 	
-	public void setDistanciaArco(int pIDV, double pDistancia)
+	public void setPesoArco(int pIDV, double pPeso)
 	{
-		buscarArcoA(pIDV).setDistancia(pDistancia);
-		buscarArcoA(pIDV).actualizarVelocidad();
-	}
-	public void setTiempoArco(int pIDV, double pTiempo)
-	{
-		buscarArcoA(pIDV).setTiempo(pTiempo);
-		buscarArcoA(pIDV).actualizarVelocidad();
+		buscarArcoA(pIDV).setPeso(pPeso);
 	}
 	
-	
-
 	public Arco buscarArcoA(int pIDV)
 	{
 		boolean seEncontro = false;
@@ -184,6 +161,11 @@ public class Vertice
 			Arco actual =  (Arco) it.next();
 			actual.desmarcar();
 		}
+	}
+
+	@Override
+	public int compareTo(Vertice arg0) {
+		return id - arg0.darId();
 	}
 	
 }

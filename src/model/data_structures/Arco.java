@@ -4,17 +4,13 @@ public class Arco<K> {
 
 	private int idV1;
 	private int idV2;
-	private double distancia;
-	private double tiempo;
-	private double velocidad;
+	private double peso;
 	private boolean marked;
 	
-	public Arco(int pIDOrigen, int pIDDestino, double pDistancia, double pTiempo, boolean pMarked) {
+	public Arco(int pIDOrigen, int pIDDestino, double pPeso, boolean pMarked) {
 		idV1 = pIDOrigen;
 		idV2 = pIDDestino;
-		distancia = pDistancia;
-		tiempo = pTiempo;
-		actualizarVelocidad();
+		peso = pPeso;
 		marked = pMarked;
 	}
 	
@@ -44,41 +40,16 @@ public class Arco<K> {
 	{
 		return marked;
 	}
-	public double darDistancia() 
+	public double darPeso() 
 	{
-		return distancia;
+		return peso;
 	}
 
-	public void setDistancia(double distancia) 
+	public void setPeso(double peso) 
 	{
-		this.distancia = distancia;
-		actualizarVelocidad();
+		this.peso = peso;
 	}
 
-	public double darTiempo() 
-	{
-		return tiempo;
-	}
-
-	public void setTiempo(double tiempo) 
-	{
-		this.tiempo = tiempo;
-		actualizarVelocidad();
-	}
-
-	public double darVelocidad() 
-	{
-		return velocidad;
-	}
-
-	public void actualizarVelocidad() 
-	{
-		if(distancia!=-1&&tiempo!=-1&&distancia!=0&&tiempo!=0)
-		{
-			velocidad= distancia/tiempo;
-		}
-		
-	}
 	public int darIdOrigen() 
 	{
 		return idV1;

@@ -86,7 +86,7 @@ public class Modelo {
 					String[] datosR = linea.split(" ");
 
 					//AQUI SE AGREGA EL ID, LONGITUD, LATITUD
-					Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]), -1);
+					Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
 					linea = br.readLine();
 				}
 				br.close();
