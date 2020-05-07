@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import model.data_structures.GrafoNoDirigido;
 import model.data_structures.Vertice;
 
 import java.io.BufferedReader;
@@ -52,10 +53,11 @@ public class Modelo {
 	 * Atributos del modelo del mundo
 	 */
 	//private IListaOrdenada<Infraccion> datos;
-	public final static String ESTACIONES = "./data/Comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
-	public final static String MAYA = "./data/Comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";	
+	public final static String  ARCOS= "./data/Acrods.txt";
+	public final static String  VERTICES= "./data/Vertices.txt";
+	public final static String ESTACIONES= "./data/estacionpolicia.geojson.json";	
 
-
+	private GrafoNoDirigido grafo;
 	//	private RedBlackBST<String, Infraccion> arbol;
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
@@ -63,9 +65,11 @@ public class Modelo {
 	public Modelo()
 	{
 
-		cargarDatosEstaciones(ESTACIONES);
-		cargarDatosVertices(MAYA);
-
+		//cargarDatosEstaciones(ESTACIONES);
+		cargarDatosVertices(VERTICES);
+		cargarDatosArcos(ARCOS);
+		
+		grafo = new GrafoNoDirigido<>(50000);
 
 	}
 
@@ -88,12 +92,14 @@ public class Modelo {
 					//AQUI SE AGREGA EL ID, LONGITUD, LATITUD
 					Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
 					linea = br.readLine();
+					grafo.addVertex(x.darId(), x.darLatitud(), );
 				}
 				br.close();
 			}
 			//TODO Parte 4 PuntoA : Complete el método según la documentación dada.
 			catch (Exception e) 
 			{
+				System.out.println("ERROR");
 				System.out.println(e.getMessage());			
 			}
 	}
@@ -111,7 +117,7 @@ public class Modelo {
 
 					int idAdyacente = Integer.parseInt(datosR[i]);
 				}
-				//AQUI SE AGREGAN LOS ADYACENTES AL OTRO
+				//AQUI SE AGREGAN los cosos al otro.
 			}
 			br.close();
 		}
