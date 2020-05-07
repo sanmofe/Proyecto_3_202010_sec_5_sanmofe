@@ -1,8 +1,5 @@
 package model.data_structures;
 
-
-import model.logic.NoExisteException;
-
 public class HTLPGraphs 
 {
 	private int capacidad;
@@ -54,7 +51,7 @@ public class HTLPGraphs
 		return hash;
 	}
 
-	public void put(int Key, int pId, double pLon, double pLat, int pMovId)
+	public void put(int Key, int pId, double pPeso, int pMovId)
 	{
 		if(verificarCapacidadCarga())
 		{
@@ -68,12 +65,12 @@ public class HTLPGraphs
 			{
 				if(keys[i].equals(Key))
 				{				
-					data[i] = new Vertice((int) Key, pLon, pLat, pMovId);
+					data[i] = new Vertice((int) Key, pPeso, pMovId);
 					return;
 				}
 			}
 			keys[i] = (Integer) Key;
-			data[i] = new Vertice((int) Key, pLon, pLat, pMovId);
+			data[i] = new Vertice((int) Key, pPeso, pMovId);
 			cantKeys++;
 
 
@@ -125,13 +122,10 @@ public class HTLPGraphs
 	}
 
 
-	public Vertice delete(int pKey) throws NoExisteException 
+	public Vertice delete(int pKey)
 	{
 		Integer key = pKey;
-		if(!contains(key)) 
-		{
-			throw new NoExisteException("No existe el elemento a eliminar");
-		}
+		if(!contains(key)) return null;
 		int i = hash(key);
 		while (!key.equals(keys[i]))
 		{
