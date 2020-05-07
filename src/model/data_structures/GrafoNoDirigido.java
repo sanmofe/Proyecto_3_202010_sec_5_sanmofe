@@ -33,6 +33,10 @@ public class GrafoNoDirigido<K, V> {
 		
 	}
 	
+	public void addEdge(K idVertexIni, K idVertexFin, double cost){
+		
+	}
+
 	public V getInfoVertex(K idVertex){
 		return null;
 	}
