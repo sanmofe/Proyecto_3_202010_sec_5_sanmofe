@@ -9,7 +9,6 @@ public class Main {
 	{
 		Controller controler = new Controller();
 		controler.run();
-		//TODO LO DE ABAJO ES LO DE LOS MAPAS xd
 //		Maps mapsReqX = new Maps("Requerimiento X");
 //		mapsReqX.initFrame();
 	}

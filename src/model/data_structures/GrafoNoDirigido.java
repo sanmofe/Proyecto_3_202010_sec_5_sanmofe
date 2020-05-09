@@ -33,10 +33,6 @@ public class GrafoNoDirigido<K, V> {
 		
 	}
 	
-	public void addEdge(K idVertexIni, K idVertexFin, double cost){
-		
-	}
-
 	public V getInfoVertex(K idVertex){
 		return null;
 	}
@@ -58,9 +54,27 @@ public class GrafoNoDirigido<K, V> {
 	}
 	
 	public void addVertex(K idVertex, Double lat, Double lon){
-		 
+		System.out.println("VAMOS A AÑADIR UN VÉRTICE AAAAAAAA");
+		if(!contains(idVertex))
+		{
+			System.out.println("I'm gonna do it!!!");
+			vertices.put((int)idVertex, new Vertice((int) idVertex, lon, lat));
+			System.out.println("I did it!!!");
+		}
+		
+		numVertices++;
+		System.out.println("Vértice añadido. Me mamé B)");
 	}
-
+	
+	public boolean contains(K pId)
+	{
+		if(getVertex((int)pId)!=null)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public Iterable <K> adj (K idVertex){
 		Queue cola = new Queue<>();
 		for(Vertice vertice : vertices.darData())

@@ -65,7 +65,7 @@ public class Modelo {
 	public Modelo()
 	{
 
-		//cargarDatosEstaciones(ESTACIONES);
+		cargarDatosEstaciones(ESTACIONES);
 		cargarDatosVertices(VERTICES);
 		cargarDatosArcos(ARCOS);
 		
@@ -85,22 +85,27 @@ public class Modelo {
 			try{
 				BufferedReader br = new BufferedReader (new FileReader(new File(pRutaArchivo)));
 				String linea = br.readLine();
+				//Esto es para tratar de evitar que el error suceda
+				while(linea.startsWith("#")) {
+					linea = br.readLine();
+				}
 				while (linea!=null)
 				{
-					String[] datosR = linea.split(" ");
-
-					//AQUI SE AGREGA EL ID, LONGITUD, LATITUD
+					String[] datosR = linea.split(",");
 					Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
+					System.out.println("Esto se ejecuta");
+					grafo.addVertex(x.darId(), x.darLatitud(),x.darLongitud());
+					System.out.println("Esto NO se ejecuta");
 					linea = br.readLine();
-					grafo.addVertex(x.darId(), x.darLatitud(), );
 				}
 				br.close();
 			}
-			//TODO Parte 4 PuntoA : Complete el método según la documentación dada.
 			catch (Exception e) 
 			{
 				System.out.println("ERROR");
-				System.out.println(e.getMessage());			
+				System.out.println(e.getMessage());	
+				System.out.println(e.getCause());
+				System.out.println(e.getStackTrace());
 			}
 	}
 	public void cargarDatosArcos(String pRutaArchivo)
