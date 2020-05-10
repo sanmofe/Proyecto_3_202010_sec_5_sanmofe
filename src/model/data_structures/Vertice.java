@@ -23,6 +23,7 @@ public class Vertice implements Comparable<Vertice>
 		componenteConectada = -1;
 	}
 	
+	
 	public Vertice(int pId, double plon, double plat, boolean pMarked, LinkedList pEdge)
 	{
 		lon = plon;
@@ -140,11 +141,8 @@ public class Vertice implements Comparable<Vertice>
 		int i = 0;
 		while(it.hasNext())
 		{
-			
 			Arco a = (Arco) it.next();
-			
 			arcos[i] = a;
-			
 			i++;
 		}
 		return arcos;

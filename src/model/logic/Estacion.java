@@ -22,4 +22,44 @@ public String nombre;
 		this.nombre = obj.get("EPONOMBRE").getAsString();
 	}
 
+	public Coordenada getCoordenada() {
+		return coordenada;
+	}
+
+	public void setCoordenada(Coordenada coordenada) {
+		this.coordenada = coordenada;
+	}
+
+	public int getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(int objectId) {
+		this.objectId = objectId;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 }

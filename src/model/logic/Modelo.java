@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -18,15 +19,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.SimpleFormatter;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import model.data_structures.Arco;
 import model.data_structures.GrafoNoDirigido;
 import model.data_structures.Vertice;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,8 +55,9 @@ public class Modelo {
 	public final static String  ARCOS= "./data/Acrods.txt";
 	public final static String  VERTICES= "./data/Vertices.txt";
 	public final static String ESTACIONES= "./data/estacionpolicia.geojson.json";	
+	public final static String JSON = "./data/grafo.json";
 
-	private GrafoNoDirigido grafo;
+	private GrafoNoDirigido<Integer, Vertice> grafo;
 	//	private RedBlackBST<String, Infraccion> arbol;
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
@@ -68,7 +68,7 @@ public class Modelo {
 		cargarDatosEstaciones(ESTACIONES);
 		cargarDatosVertices(VERTICES);
 		cargarDatosArcos(ARCOS);
-		
+
 		grafo = new GrafoNoDirigido<>(50000);
 
 	}
@@ -82,31 +82,33 @@ public class Modelo {
 	 */
 	public void cargarDatosVertices(String pRutaArchivo)
 	{
-			try{
-				BufferedReader br = new BufferedReader (new FileReader(new File(pRutaArchivo)));
-				String linea = br.readLine();
-				//Esto es para tratar de evitar que el error suceda
-				while(linea.startsWith("#")) {
-					linea = br.readLine();
-				}
-				while (linea!=null)
-				{
-					String[] datosR = linea.split(",");
-					Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
-					System.out.println("Esto se ejecuta");
-					grafo.addVertex(x.darId(), x.darLatitud(),x.darLongitud());
-					System.out.println("Esto NO se ejecuta");
-					linea = br.readLine();
-				}
-				br.close();
+		try{
+			BufferedReader br = new BufferedReader (new FileReader(new File(pRutaArchivo)));
+			String linea = br.readLine();
+			//Esto es para tratar de evitar que el error suceda
+			while(linea.startsWith("#")) {
+				linea = br.readLine();
 			}
-			catch (Exception e) 
+			while (linea!=null)
 			{
-				System.out.println("ERROR");
-				System.out.println(e.getMessage());	
-				System.out.println(e.getCause());
-				System.out.println(e.getStackTrace());
+				String[] datosR = linea.split(",");
+				Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
+				System.out.println("Esto se ejecuta");
+				System.out.println(x.darId() + " " + x.darLatitud() + x.darLongitud());
+				//POR ALGUNA RAZÓN ESTO NO LLAMA AL MÉTODO AAAAAAAAAAAAAAAAAAAAAA
+				grafo.addVertex(x.darId(), x);
+				System.out.println("Esto NO se ejecuta");
+				linea = br.readLine();
 			}
+			br.close();
+		}
+		catch (Exception e) 
+		{
+			System.out.println("ERROR");
+			System.out.println(e.getMessage());	
+			System.out.println(e.getCause());
+			System.out.println(e.getStackTrace());
+		}
 	}
 	public void cargarDatosArcos(String pRutaArchivo)
 	{
@@ -137,19 +139,69 @@ public class Modelo {
 
 		JsonParser parser = new JsonParser();
 		InputStreamReader inputStreamReader;
+		int conteoEstaciones = 0;
 		try {
 			inputStreamReader = new InputStreamReader(new FileInputStream(new File(pRutaArchivo)), StandardCharsets.UTF_8);
 			JsonObject object = parser.parse( inputStreamReader).getAsJsonObject();
 			JsonArray features = object.get("features").getAsJsonArray();
+			
 			for(JsonElement jo : features) {
 				JsonObject elem = jo.getAsJsonObject();
 				Estacion x = new Estacion(elem);
 				//AGREGA EN LAS ESTRUCTURAS DE DATOS
-
+				conteoEstaciones++;
+				System.out.println("Cargada estación: " + x.getNombre());
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		System.out.println("Estaciones cargadas: " + conteoEstaciones);
+	}
+
+	public void hacerUnArchivoJSON(){
+		try {
+			Vertice[] vertices = grafo.darTodos();
+			File json = new File(JSON);
+			if(!json.exists()) json.mkdirs();
+			PrintWriter out;
+			out = new PrintWriter( json );
+			int vActual = 0;
+			out.println( "{" );
+			for (Vertice v : vertices) {
+				out.println("    {");
+				out.println("    id:"+v.darId());
+				out.println("    latitud:"+v.darLatitud());
+				out.println("    longitud:"+v.darLongitud());
+				Arco[] arcos = v.darArcosD();
+				int aActual = 0;
+				out.println("    arcos: {");
+				for (Arco a : arcos) {
+					out.println("        idOrigen:"+a.darIdOrigen());
+					out.println("        idDestino:"+a.darIdDestino());
+					out.println("        peso:"+a.darPeso());
+					aActual++;
+					if(aActual < arcos.length) {
+						out.println("        },");
+					}
+					else {
+						out.println("        }");
+					}
+				}
+				vActual++;
+				if(vActual < vertices.length) {
+					out.println("    },");
+				}
+				else {
+					out.println("    }");
+				}
+			}
+			out.println("}");
+			out.close( );
+		}
+		catch(Exception e) {
+			System.out.println("Hubo un error al hacer el archivo. F");
+			System.out.println(e.getMessage());
 		}
 	}
 

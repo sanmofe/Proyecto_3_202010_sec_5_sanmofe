@@ -8,39 +8,43 @@ import model.data_structures.Vertice;
 public class GrafoNoDirigido<K, V> {
 
 	private int numVertices;
-	
+
 	private int numArcos;
-	
+
 	private HTLPGraphs vertices;
-	
+
 	private int lol;
-	
+
 	public GrafoNoDirigido(int n) {
 		numVertices = n;
 		vertices = new HTLPGraphs(n);
 		lol = 0;
 	}
-	
+
 	public int V(){ //VÉRTICES
 		return numVertices;
 	}
-	
+
 	public int E(){ //ARCOS
 		return numArcos;
 	}
-	
+
 	public void addEdge(K idVertexIni, K idVertexFin, double cost){
-		
+
 	}
-	
-	public V getInfoVertex(K idVertex){
-		return null;
+
+	public double[] getInfoVertex(int idVertex){
+		double aRetornar[] = new double[4];
+		aRetornar[0] = ((Vertice) vertices.get(idVertex)).darId();
+		aRetornar[1] = ((Vertice) vertices.get(idVertex)).darLongitud();
+		aRetornar[2] = ((Vertice) vertices.get(idVertex)).darLatitud();
+		return aRetornar;
 	}
-	
-	public void setInfoVertex(K idVertex, V infoVertex){
-		
+
+	public void setInfoVertex(K idVertex, Double plon, Double plat){
+		((Vertice) vertices.get((int)idVertex)).setInfo((int)idVertex, plon, plat);
 	}
-	
+
 	public double getCostArc(int idVertexIni, int idVertexFin){
 		Vertice ini = (Vertice) vertices.get(idVertexIni);
 		return ini.darPeso(idVertexFin);
@@ -52,8 +56,8 @@ public class GrafoNoDirigido<K, V> {
 		ini.setPesoArco(idVertexFin, cost);
 		fin.setPesoArco(idVertexIni, cost);
 	}
-	
-	public void addVertex(K idVertex, Double lat, Double lon){
+
+	public void addVertex(int idVertex, Double lat, Double lon){
 		System.out.println("VAMOS A AÑADIR UN VÉRTICE AAAAAAAA");
 		if(!contains(idVertex))
 		{
@@ -61,20 +65,29 @@ public class GrafoNoDirigido<K, V> {
 			vertices.put((int)idVertex, new Vertice((int) idVertex, lon, lat));
 			System.out.println("I did it!!!");
 		}
-		
 		numVertices++;
 		System.out.println("Vértice añadido. Me mamé B)");
 	}
-	
-	public boolean contains(K pId)
+
+	public void addVertex(int idVertex, Vertice V)
 	{
-		if(getVertex((int)pId)!=null)
+		if(!contains(idVertex)&&V!=null)
+		{
+			vertices.put(idVertex, V);
+		}
+		numVertices++;
+
+	}
+
+	public boolean contains(int pId)
+	{
+		if(getVertex(pId)!=null)
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	public Iterable <K> adj (K idVertex){
 		Queue cola = new Queue<>();
 		for(Vertice vertice : vertices.darData())
@@ -95,12 +108,24 @@ public class GrafoNoDirigido<K, V> {
 		}
 		return (Iterable<K>) arreglo;
 	}
-	
-	public void uncheck(){
-		
+
+	public Vertice[] darTodos() {
+		return vertices.darData();
 	}
 	
-	
+	public void uncheck(){
+		Vertice[] todos = vertices.darData();
+		for(Vertice vertice : todos)
+		{
+			if(vertice!=null)
+			{
+				vertice.desmarcar();
+				vertice.setComponenteConectada(-1);
+			}
+		}
+	}
+
+
 	public int cc(){
 		Vertice todos[] = vertices.darData();
 		int cantidad = 0;
@@ -115,23 +140,21 @@ public class GrafoNoDirigido<K, V> {
 					DepthFirstSearch(v.darId(),cc);
 					cc++;
 				}
-			}
-			
-			
+			}	
 		}
 		uncheck();
 		return cantidad;
 	}
-	
+
 	public Iterable<K> getCC(K idVertex){
 		return new ArrayList<K>(); //TODO Hay que cambiar esto o nos pegan x2 xd
 	}
 
 	public void DepthFirstSearch(int vID, int cc)   
 	{        
-		
+
 		int i = 0, b = 0;
-		
+
 		i = dfs(vID, cc, b);
 	}   
 
@@ -139,7 +162,7 @@ public class GrafoNoDirigido<K, V> {
 	{
 		return (Vertice) vertices.get((int) id);
 	}
-	
+
 	private int dfs(int vID, int cc, int pCantMarcada)   
 	{      
 		int cantMarcada = pCantMarcada;
@@ -147,19 +170,20 @@ public class GrafoNoDirigido<K, V> {
 		actual.marcar(); 
 		actual.setComponenteConectada(cc);
 		cantMarcada++;   
-		
+
 		int[] aExplorar = actual.adj();
 		for (int w : aExplorar)
 		{
-			
+
 			Vertice adyActual = (Vertice) vertices.get(w);
 			if (!adyActual.isMarked())
 			{
 				cantMarcada=dfs(w, cc, cantMarcada); 
-				
+
 			}
 		}
 		return cantMarcada;
 
 	}
 }
+

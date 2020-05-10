@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 
 import model.logic.Modelo;
+import view.maps.Maps;
 import view.maps.View;
 
 public class Controller {
@@ -41,8 +42,12 @@ public class Controller {
 				modelo = new Modelo(); 
 				break;
 			case 2:
+				modelo.hacerUnArchivoJSON();
+				view.printMessage("El archivo se ha generado.");
 				break;
 			case 3:
+				Maps mapa = new Maps("idk man");
+				mapa.initFrame();
 				break;
 			case 4:
 				
