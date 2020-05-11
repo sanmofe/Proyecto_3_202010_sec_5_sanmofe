@@ -95,7 +95,7 @@ public class Modelo {
 				Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
 				System.out.println("Esto se ejecuta");
 				System.out.println(x.darId() + " " + x.darLatitud() + x.darLongitud());
-				//POR ALGUNA RAZÓN ESTO NO LLAMA AL MÉTODO AAAAAAAAAAAAAAAAAAAAAA
+				//TODO Arreglar el maldito error sin nombre O rehacer todo el maldito método. Whatever.
 				grafo.addVertex(x.darId(), x);
 				System.out.println("Esto NO se ejecuta");
 				linea = br.readLine();
@@ -104,6 +104,7 @@ public class Modelo {
 		}
 		catch (Exception e) 
 		{
+			//Aquí se imprime la info del error. La cual no existe btw.
 			System.out.println("ERROR");
 			System.out.println(e.getMessage());	
 			System.out.println(e.getCause());
@@ -121,14 +122,12 @@ public class Modelo {
 				int idActual = Integer.parseInt(datosR[0]);
 				for (int i=1; i<=datosR.length; i++)
 				{
-
 					int idAdyacente = Integer.parseInt(datosR[i]);
 				}
 				//AQUI SE AGREGAN los cosos al otro.
 			}
 			br.close();
 		}
-		//TODO Parte 4 PuntoA : Complete el método según la documentación dada.
 		catch (Exception e) 
 		{
 			System.out.println(e.getMessage());			
@@ -144,7 +143,7 @@ public class Modelo {
 			inputStreamReader = new InputStreamReader(new FileInputStream(new File(pRutaArchivo)), StandardCharsets.UTF_8);
 			JsonObject object = parser.parse( inputStreamReader).getAsJsonObject();
 			JsonArray features = object.get("features").getAsJsonArray();
-			
+
 			for(JsonElement jo : features) {
 				JsonObject elem = jo.getAsJsonObject();
 				Estacion x = new Estacion(elem);
@@ -205,5 +204,70 @@ public class Modelo {
 		}
 	}
 
+	/**
+	 * Retorna el id del nodo más cercano basado en su distancia Haversine
+	 */
+	public int inicio1(double lat, double lon) {
+		return 0;
+	}
+	/**
+  	Obtener el camino de costo mínimo entre dos ubicaciones geográficas por distancia
+  	
+  	Muestre en la consola de texto el camino a seguir informando:
+	el total de vértices, sus vértices (Id, latitud, longitud), el costo mínimo (menor distancia
+	haversiana) y la distancia estimada (sumatoria de distancias harvesianas en Km).
+	
+	Muestre el camino resultante en Google Maps (incluyendo la
+	ubicación de inicio y la ubicación de destino).
+	 */
+	public String a1(double latIni, double lonIni, double latFin, double lonFin) {
+		return "";
+	}
 
+	/**
+	 Determinar la red de comunicaciones que soporte la instalación de cámaras de video
+	en los M puntos donde se presentan los comparendos de mayor gravedad.
+	
+	Muestre en la consola de texto el tiempo que toma el algoritmo
+	en encontrar la solución, y la siguiente información de la red propuesta: los vértices
+	(identificadores) y los arcos incluidos, y el costo (monetario) total.
+
+	Muestre en un mapa en Google Maps la red de comunicaciones
+	propuesta. Resalte las M ubicaciones de las cámaras y los arcos de la red que las unen. 
+	 */
+	public String a2(int m) {
+		return "";
+	}
+	
+	/**
+	 Obtener el camino de costo mínimo entre dos ubicaciones geográficas por número de
+	comparendos
+	
+	Muestre en la consola de texto el camino a seguir, informando
+	el total de vértices, sus vértices (Id, latitud, longitud), el costo mínimo (menor cantidad
+	de comparendos) y la distancia estimada (sumatoria de distancias harvesianas en Km).
+	 
+	 Muestre el camino resultante en Google Maps (incluyendo la
+	ubicación de inicio y la ubicación de destino).
+
+	 */
+	public String b1(double latIni, double lonIni, double latFin, double lonFin) {
+		return "";
+	}
+	
+	/**
+	 Determinar la red de comunicaciones que soporte la instalación de cámaras de video
+	en los M puntos donde se presenta el mayor número de comparendos en la ciudad.
+	
+	Muestre en la consola de texto el tiempo que toma el algoritmo
+	encontrar la solución (en milisegundos), y la siguiente información de la red
+	propuesta: el total de vértices en el componente, los vértices (identificadores), los arcos
+	incluidos (Id vértice inicial e Id vértice final) y el costo (monetario) total.
+	
+	Muestre en un mapa en Google Maps la red de comunicaciones
+	propuesta. Resalte las M ubicaciones de las cámaras y los arcos de la red que las unen.  
+	 */
+	public String b2(int M) {
+		return "";
+	}
 }
