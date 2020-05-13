@@ -30,7 +30,7 @@ public class GrafoNoDirigido<K, V> {
 	}
 
 	public void addEdge(K idVertexIni, K idVertexFin, double cost){
-
+		
 	}
 
 	public double[] getInfoVertex(int idVertex){
@@ -57,16 +57,12 @@ public class GrafoNoDirigido<K, V> {
 		fin.setPesoArco(idVertexIni, cost);
 	}
 
-	public void addVertex(int idVertex, Double lat, Double lon){
-		System.out.println("VAMOS A AÑADIR UN VÉRTICE AAAAAAAA");
+	public void addVertex(int idVertex, double lat, double lon){
 		if(!contains(idVertex))
 		{
-			System.out.println("I'm gonna do it!!!");
 			vertices.put((int)idVertex, new Vertice((int) idVertex, lon, lat));
-			System.out.println("I did it!!!");
 		}
 		numVertices++;
-		System.out.println("Vértice añadido. Me mamé B)");
 	}
 
 	public void addVertex(int idVertex, Vertice V)

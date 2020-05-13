@@ -64,13 +64,10 @@ public class Modelo {
 	 */
 	public Modelo()
 	{
-
+		grafo = new GrafoNoDirigido<>(50000);
 		cargarDatosEstaciones(ESTACIONES);
 		cargarDatosVertices(VERTICES);
 		cargarDatosArcos(ARCOS);
-
-		grafo = new GrafoNoDirigido<>(50000);
-
 	}
 
 
@@ -82,54 +79,58 @@ public class Modelo {
 	 */
 	public void cargarDatosVertices(String pRutaArchivo)
 	{
-		try{
-			BufferedReader br = new BufferedReader (new FileReader(new File(pRutaArchivo)));
-			String linea = br.readLine();
-			//Esto es para tratar de evitar que el error suceda
-			while(linea.startsWith("#")) {
-				linea = br.readLine();
+		String lineaActual = "";
+		try {
+			BufferedReader lector = new BufferedReader( new FileReader( VERTICES ) );
+			lineaActual = lector.readLine();
+			while(lineaActual != null) {
+				String[] partes = lineaActual.split(",");
+				int idVertex = Integer.parseInt(partes[0]);
+				double lat = Double.parseDouble(partes[1]);
+				double lon = Double.parseDouble(partes[2]);
+				grafo.addVertex(idVertex, lat, lon);
+				lineaActual = lector.readLine();
 			}
-			while (linea!=null)
-			{
-				String[] datosR = linea.split(",");
-				Vertice x = new Vertice(Integer.parseInt(datosR[0]), Double.parseDouble(datosR[1]),Double.parseDouble(datosR[2]));
-				System.out.println("Esto se ejecuta");
-				System.out.println(x.darId() + " " + x.darLatitud() + x.darLongitud());
-				//TODO Arreglar el maldito error sin nombre O rehacer todo el maldito método. Whatever.
-				grafo.addVertex(x.darId(), x);
-				System.out.println("Esto NO se ejecuta");
-				linea = br.readLine();
-			}
-			br.close();
-		}
-		catch (Exception e) 
-		{
-			//Aquí se imprime la info del error. La cual no existe btw.
-			System.out.println("ERROR");
-			System.out.println(e.getMessage());	
+			lector.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			System.out.println(e.getCause());
-			System.out.println(e.getStackTrace());
 		}
 	}
 	public void cargarDatosArcos(String pRutaArchivo)
 	{
+		String linea = "";
 		try{
 			BufferedReader br = new BufferedReader (new FileReader(new File(pRutaArchivo)));
-			String linea = br.readLine();
+			linea = br.readLine();
 			while (linea!=null)
 			{
 				String[] datosR = linea.split(" ");
-				int idActual = Integer.parseInt(datosR[0]);
-				for (int i=1; i<=datosR.length; i++)
-				{
-					int idAdyacente = Integer.parseInt(datosR[i]);
+				int idUno = Integer.parseInt(datosR[0]);
+				while(idUno  % 37501 == 0 || idUno == 150003) {
+					linea = br.readLine();
+					datosR = linea.split(" ");
+					idUno = Integer.parseInt(datosR[0]);
 				}
-				//AQUI SE AGREGAN los cosos al otro.
+				double latUno = grafo.getInfoVertex(idUno)[2];
+				double lonUno = grafo.getInfoVertex(idUno)[1];
+				for(int i = 1; i < datosR.length; i++) {
+					int idDos = Integer.parseInt(datosR[i]);
+					if(idDos % 37501 == 0 || idDos == 150003) continue;
+					double lonDos = grafo.getInfoVertex(idDos)[1];
+					double latDos = grafo.getInfoVertex(idDos)[2];
+					double costoHaversine = Haversine.distance(latUno, lonUno, latDos, lonDos);
+					grafo.addEdge(idUno, idDos, costoHaversine);
+				}
+				linea = br.readLine();
 			}
 			br.close();
 		}
 		catch (Exception e) 
 		{
+			System.out.println("EEEEEEEEEEEERRRRRRRRRRRRROOOOOOOOOOOOOOORRRRRRRRRR");
+			System.out.println("En la línea: " + linea);
+			System.out.println(e.getCause());
 			System.out.println(e.getMessage());			
 		}		
 	}
@@ -212,11 +213,11 @@ public class Modelo {
 	}
 	/**
   	Obtener el camino de costo mínimo entre dos ubicaciones geográficas por distancia
-  	
+
   	Muestre en la consola de texto el camino a seguir informando:
 	el total de vértices, sus vértices (Id, latitud, longitud), el costo mínimo (menor distancia
 	haversiana) y la distancia estimada (sumatoria de distancias harvesianas en Km).
-	
+
 	Muestre el camino resultante en Google Maps (incluyendo la
 	ubicación de inicio y la ubicación de destino).
 	 */
@@ -227,7 +228,7 @@ public class Modelo {
 	/**
 	 Determinar la red de comunicaciones que soporte la instalación de cámaras de video
 	en los M puntos donde se presentan los comparendos de mayor gravedad.
-	
+
 	Muestre en la consola de texto el tiempo que toma el algoritmo
 	en encontrar la solución, y la siguiente información de la red propuesta: los vértices
 	(identificadores) y los arcos incluidos, y el costo (monetario) total.
@@ -238,36 +239,6 @@ public class Modelo {
 	public String a2(int m) {
 		return "";
 	}
-	
-	/**
-	 Obtener el camino de costo mínimo entre dos ubicaciones geográficas por número de
-	comparendos
-	
-	Muestre en la consola de texto el camino a seguir, informando
-	el total de vértices, sus vértices (Id, latitud, longitud), el costo mínimo (menor cantidad
-	de comparendos) y la distancia estimada (sumatoria de distancias harvesianas en Km).
-	 
-	 Muestre el camino resultante en Google Maps (incluyendo la
-	ubicación de inicio y la ubicación de destino).
 
-	 */
-	public String b1(double latIni, double lonIni, double latFin, double lonFin) {
-		return "";
-	}
-	
-	/**
-	 Determinar la red de comunicaciones que soporte la instalación de cámaras de video
-	en los M puntos donde se presenta el mayor número de comparendos en la ciudad.
-	
-	Muestre en la consola de texto el tiempo que toma el algoritmo
-	encontrar la solución (en milisegundos), y la siguiente información de la red
-	propuesta: el total de vértices en el componente, los vértices (identificadores), los arcos
-	incluidos (Id vértice inicial e Id vértice final) y el costo (monetario) total.
-	
-	Muestre en un mapa en Google Maps la red de comunicaciones
-	propuesta. Resalte las M ubicaciones de las cámaras y los arcos de la red que las unen.  
-	 */
-	public String b2(int M) {
-		return "";
-	}
+
 }
