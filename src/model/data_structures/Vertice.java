@@ -20,6 +20,8 @@ public class Vertice implements Comparable<Vertice>
 
 	public Vertice(int pId, double plon, double plat)
 	{
+		infracciones = new ArregloDinamico<Infraccion>(50);
+		estaciones = new ArregloDinamico<Estacion>(20);
 		lon = plon;
 		lat = plat;
 		marked = false;
@@ -29,15 +31,15 @@ public class Vertice implements Comparable<Vertice>
 	}
 	
 	
-	public Vertice(int pId, double plon, double plat, boolean pMarked, LinkedList pEdge)
-	{
-		lon = plon;
-		lat = plat;
-		marked = pMarked;
-		id = pId;
-		edgeTo = pEdge;
-		
-	}
+//	public Vertice(int pId, double plon, double plat, boolean pMarked, LinkedList pEdge)
+//	{
+//		lon = plon;
+//		lat = plat;
+//		marked = pMarked;
+//		id = pId;
+//		edgeTo = pEdge;
+//		
+//	}
 	
 	public void cleanArcos()
 	{

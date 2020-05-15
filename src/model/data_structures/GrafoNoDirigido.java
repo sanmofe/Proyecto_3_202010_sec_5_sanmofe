@@ -29,8 +29,18 @@ public class GrafoNoDirigido<K, V> {
 		return numArcos;
 	}
 
-	public void addEdge(K idVertexIni, K idVertexFin, double cost){
-		
+	public void addEdge(int idVertexIni, int idVertexFin, double cost){
+		Vertice V1 = (Vertice) vertices.get(idVertexIni);
+		Vertice V2 = (Vertice) vertices.get(idVertexFin);
+		if(V1!=null&&V2!=null)
+		{
+			if(V1.buscarArcoA(idVertexFin)==null&&V2.buscarArcoA(idVertexIni)==null)
+			{
+				V1.anadirArco(idVertexFin, cost);
+				V2.anadirArco(idVertexIni, cost);
+				numArcos++;
+			}
+		}
 	}
 
 	public double[] getInfoVertex(int idVertex){

@@ -40,7 +40,10 @@ public class Controller {
 			switch(option){
 			case 1:
 				modelo = new Modelo(); 
-				view.printMessage(modelo.cargarTodosLosDatos());
+				view.printMessage(modelo.cargarDatosVertices(Modelo.VERTICES));
+				view.printMessage(modelo.cargarDatosComparendos(Modelo.LOSOTROSCOMPARENDOS));
+				view.printMessage(modelo.cargarDatosEstaciones(Modelo.ESTACIONES));
+				view.printMessage(modelo.cargarDatosArcos(Modelo.ARCOS));
 				break;
 			case 2:
 				modelo.hacerUnArchivoJSON();

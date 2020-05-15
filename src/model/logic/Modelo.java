@@ -63,8 +63,8 @@ public class Modelo {
 	public final static String ESTACIONES= "./data/estacionpolicia.geojson.json";	
 	public final static String JSON = "./data/grafo.json";
 	public final static String COMPARENDOS = "./data/Comparendos_DEI_2018_Bogotá_D.C_small_50000_sorted.geojson.json";
-
-	
+	public final static String MINICOMPARENDOS = "./data/Comparendos_DEI_2018_Bogotá_D.C_small.geojson";
+	public final static String LOSOTROSCOMPARENDOS = "./data/Comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
 	/**
 	 * El árbol binario que contiene una copia de los vértices.
 	 */
@@ -85,7 +85,7 @@ public class Modelo {
 
 
 	public String cargarTodosLosDatos() {
-		return("Datos de vértices: " + cargarDatosVertices(VERTICES) + "\nDatos de estaciones:\n" + cargarDatosEstaciones(ESTACIONES) + "\nDatos de comparendos:\n" + cargarDatosComparendos(COMPARENDOS) + "\nDatos de arcos:\n" + cargarDatosArcos(ARCOS));
+		return("Datos de vértices: " + cargarDatosVertices(VERTICES) +  "\nDatos de comparendos:\n" + cargarDatosComparendos(LOSOTROSCOMPARENDOS) + "\nDatos de estaciones:\n" + cargarDatosEstaciones(ESTACIONES) + "\nDatos de arcos:\n" + cargarDatosArcos(ARCOS));
 	}
 	
 	/**
@@ -225,8 +225,24 @@ public class Modelo {
 			Vertice[] vertices = grafo.darTodos();
 			for (Vertice v : vertices) {
 				gson.toJson(v, writer);
-				writer.close();
+				Arco[] arcos = v.darArcosD();
+				for (Arco a : arcos) {
+					gson.toJson(a);
+				}
+				Iterator<Estacion> estaciones = v.estaciones();
+				Estacion e = estaciones.next();
+				while(estaciones.hasNext()) {
+					gson.toJson(e);
+					e = estaciones.next();
+				}
+				Iterator<Infraccion> infracciones = v.infracciones();
+				Infraccion i = infracciones.next();
+				while (infracciones.hasNext()){
+					gson.toJson(i);
+					i = infracciones.next();
+				}
 			}
+			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
