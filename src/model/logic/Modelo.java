@@ -85,7 +85,7 @@ public class Modelo {
 
 
 	public String cargarTodosLosDatos() {
-		return("Datos de vértices: " + cargarDatosVertices(VERTICES) +  "\nDatos de comparendos:\n" + cargarDatosComparendos(LOSOTROSCOMPARENDOS) + "\nDatos de estaciones:\n" + cargarDatosEstaciones(ESTACIONES) + "\nDatos de arcos:\n" + cargarDatosArcos(ARCOS));
+		return("Datos de vértices: " + cargarDatosVertices(VERTICES) +  "\nDatos de comparendos:\n" + cargarDatosComparendos(MINICOMPARENDOS) + "\nDatos de estaciones:\n" + cargarDatosEstaciones(ESTACIONES) + "\nDatos de arcos:\n" + cargarDatosArcos(ARCOS));
 	}
 	
 	/**
@@ -149,7 +149,8 @@ public class Modelo {
 					double lonDos = grafo.getInfoVertex(idDos)[1];
 					double latDos = grafo.getInfoVertex(idDos)[2];
 					double costoHaversine = Haversine.distance(latUno, lonUno, latDos, lonDos);
-					grafo.addEdge(idUno, idDos, costoHaversine);
+					double costoComp = grafo.darComparendosVertice(idUno) + grafo.darComparendosVertice(idDos);
+					grafo.addEdge(idUno, idDos, costoHaversine, costoComp);
 				}
 				ultimo = linea;
 				linea = br.readLine();
@@ -180,13 +181,36 @@ public class Modelo {
 			for(JsonElement jo : features) {
 				JsonObject elem = jo.getAsJsonObject();
 				Estacion x = new Estacion(elem);
-				//AGREGA EN LAS ESTRUCTURAS DE DATOS
+				//Vamos a hacer lo del árbol AAAAAAAAAAAAA
+				boolean asignado = false;
+				double rango = 0.000001;
+				while(!asignado) {
+					double limMenor = x.getCoordenada().getLongitude() - rango;
+					double limMayor = x.getCoordenada().getLongitude() + rango;
+					Iterator<Vertice> verticesPosibles = arbol.valuesInRange(limMenor, limMayor ).iterator();
+					Vertice v = verticesPosibles.next();
+					if(v == null) {
+						rango *= 2;
+						continue;
+					}
+					double distanciaMinima = 1000000.761;
+					Vertice vertActual = null;
+					while(verticesPosibles.hasNext()) {
+						double distancia = Haversine.distance(x.getCoordenada().getLatitude(), x.getCoordenada().getLongitude(), v.darLatitud(), v.darLongitud());
+						if(distancia < distanciaMinima) {
+							distanciaMinima = distancia;
+							vertActual = v;
+						}
+						v = verticesPosibles.next();
+					}
+					grafo.agregarEstacionAVertex(v.darId(), x);
+					asignado = true;
+				}
 				conteoEstaciones++;
 				devuelveme += (x.getNombre() + "\n");
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error. Arréglalo, gei.");
 		}
 		devuelveme += "Estaciones cargadas: " + conteoEstaciones;
 		return devuelveme;
@@ -208,6 +232,30 @@ public class Modelo {
 					mayor = x;
 				}
 				conteoInfracciones++;
+				boolean asignado = false;
+				double rango = 0.000001;
+				while(!asignado) {
+					double limMenor = x.getCoordenada().getLongitude() - rango;
+					double limMayor = x.getCoordenada().getLongitude() + rango;
+					Iterator<Vertice> verticesPosibles = arbol.valuesInRange(limMenor, limMayor ).iterator();
+					Vertice v = verticesPosibles.next();
+					if(v == null) {
+						rango *= 2;
+						continue;
+					}
+					double distanciaMinima = 1000000.761;
+					Vertice vertActual = null;
+					while(verticesPosibles.hasNext()) {
+						double distancia = Haversine.distance(x.getCoordenada().getLatitude(), x.getCoordenada().getLongitude(), v.darLatitud(), v.darLongitud());
+						if(distancia < distanciaMinima) {
+							distanciaMinima = distancia;
+							vertActual = v;
+						}
+						v = verticesPosibles.next();
+					}
+					grafo.agregarInfraccionAVertex(v.darId(), x);
+					asignado = true;
+				}
 			}
 		}
 		catch (Exception e) {

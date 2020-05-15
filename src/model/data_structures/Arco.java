@@ -4,13 +4,15 @@ public class Arco<K> {
 
 	private int idV1;
 	private int idV2;
-	private double peso;
+	private double pesoHaversine;
+	private double pesoComparendos;
 	private boolean marked;
 	
-	public Arco(int pIDOrigen, int pIDDestino, double pPeso, boolean pMarked) {
+	public Arco(int pIDOrigen, int pIDDestino, double pHaversine, double pComparendos, boolean pMarked) {
 		idV1 = pIDOrigen;
 		idV2 = pIDDestino;
-		peso = pPeso;
+		pesoHaversine = pHaversine;
+		pesoComparendos = pComparendos;
 		marked = pMarked;
 	}
 	
@@ -40,16 +42,24 @@ public class Arco<K> {
 	{
 		return marked;
 	}
-	public double darPeso() 
+	public double darPesoHaversine() 
 	{
-		return peso;
+		return pesoHaversine;
 	}
 
-	public void setPeso(double peso) 
+	public double darPesoComparendos() {
+		return pesoComparendos;
+	}
+	
+	public void setPesoHaversine(double peso) 
 	{
-		this.peso = peso;
+		pesoHaversine = peso;
 	}
 
+	public void setPesoComparendos(double peso) {
+		pesoComparendos = peso;
+	}
+	
 	public int darIdOrigen() 
 	{
 		return idV1;

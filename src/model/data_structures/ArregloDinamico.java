@@ -48,7 +48,7 @@ public class ArregloDinamico<T> implements IArregloDinamico<T>, Iterable<T>{
                     } 
             	    //System.out.println("Arreglo lleno: " + tamanoAct + " - Arreglo duplicado: " + tamanoMax);
                }	
-               elementos[tamanoAct] = dato;
+               elementos[tamanoAct]=dato;
                tamanoAct++;
        }
 

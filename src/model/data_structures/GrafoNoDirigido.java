@@ -1,9 +1,12 @@
 package model.data_structures;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import model.data_structures.HTLPGraphs;
 import model.data_structures.Vertice;
+import model.logic.Estacion;
+import model.logic.Infraccion;
 
 public class GrafoNoDirigido<K, V> {
 
@@ -29,20 +32,44 @@ public class GrafoNoDirigido<K, V> {
 		return numArcos;
 	}
 
-	public void addEdge(int idVertexIni, int idVertexFin, double cost){
+	public void addEdge(int idVertexIni, int idVertexFin, double costHav, double costComp){
 		Vertice V1 = (Vertice) vertices.get(idVertexIni);
 		Vertice V2 = (Vertice) vertices.get(idVertexFin);
 		if(V1!=null&&V2!=null)
 		{
 			if(V1.buscarArcoA(idVertexFin)==null&&V2.buscarArcoA(idVertexIni)==null)
 			{
-				V1.anadirArco(idVertexFin, cost);
-				V2.anadirArco(idVertexIni, cost);
+				V1.anadirArco(idVertexFin, costHav, costComp);
+				V2.anadirArco(idVertexIni, costHav, costComp);
 				numArcos++;
 			}
 		}
 	}
 
+	
+	public int darComparendosVertice(int idVertex) {
+		int respuesta = 0;
+		Vertice v = (Vertice) vertices.get(idVertex);
+		Iterator<Infraccion> it = v.infracciones();
+		Infraccion i = it.next();
+		while(it.hasNext()) {
+			respuesta++;
+			i = it.next();
+		}
+		return respuesta;
+	}
+	
+	
+	public void agregarInfraccionAVertex(int idVertex, Infraccion inf) {
+		Vertice v = (Vertice) vertices.get(idVertex);
+		v.agregarInfraccion(inf);
+	}
+	
+	public void agregarEstacionAVertex(int idVertex, Estacion est) {
+		Vertice v = (Vertice) vertices.get(idVertex);
+		v.agregarEstacion(est);
+	}
+	
 	public double[] getInfoVertex(int idVertex){
 		double aRetornar[] = new double[3];
 		aRetornar[0] = ((Vertice) vertices.get(idVertex)).darId();
@@ -55,18 +82,30 @@ public class GrafoNoDirigido<K, V> {
 		((Vertice) vertices.get((int)idVertex)).setInfo((int)idVertex, plon, plat);
 	}
 
-	public double getCostArc(int idVertexIni, int idVertexFin){
+	public double getCostHavArc(int idVertexIni, int idVertexFin){
 		Vertice ini = (Vertice) vertices.get(idVertexIni);
-		return ini.darPeso(idVertexFin);
+		return ini.darPesoHaversine(idVertexFin);
 	}
 
-	public void setCostArc(int idVertexIni, int idVertexFin, double cost){
+	public double getCostComArc(int idVertexIni, int idVertexFin){
+		Vertice ini = (Vertice) vertices.get(idVertexIni);
+		return ini.darPesoComparendos(idVertexFin);
+	}
+	
+	public void setCostHavArc(int idVertexIni, int idVertexFin, double cost){
 		Vertice ini = (Vertice) vertices.get(idVertexIni);
 		Vertice fin =  (Vertice) vertices.get(idVertexFin);
-		ini.setPesoArco(idVertexFin, cost);
-		fin.setPesoArco(idVertexIni, cost);
+		ini.setPesoHaversineArco(idVertexFin, cost);
+		fin.setPesoHaversineArco(idVertexIni, cost);
 	}
 
+	public void setCostCompArc(int idVertexIni, int idVertexFin, double cost){
+		Vertice ini = (Vertice) vertices.get(idVertexIni);
+		Vertice fin =  (Vertice) vertices.get(idVertexFin);
+		ini.setPesoComparendosArco(idVertexFin, cost);
+		fin.setPesoComparendosArco(idVertexIni, cost);
+	}
+	
 	public void addVertex(int idVertex, double lat, double lon){
 		if(!contains(idVertex))
 		{

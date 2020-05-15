@@ -2,7 +2,6 @@ package model.data_structures;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import model.logic.Estacion;
 import model.logic.Infraccion;
 
@@ -54,9 +53,9 @@ public class Vertice implements Comparable<Vertice>
 		return componenteConectada;
 	}
 	
-	public void anadirArco(int pVId, double pPeso)
+	public void anadirArco(int pVId, double pPesoHaversine, double pPesoComparendos)
 	{
-		Arco arco = new Arco(id, pVId, pPeso ,false);
+		Arco arco = new Arco(id, pVId, pPesoHaversine, pPesoComparendos, false);
 		edgeTo.add(arco);
 	}
 	public void eliminarArco(int pVId)
@@ -76,9 +75,13 @@ public class Vertice implements Comparable<Vertice>
 		return lat;
 	}
 
-	public double darPeso(int pVId)
+	public double darPesoHaversine(int pVId)
 	{
-		return (double) buscarArcoA(pVId).darPeso();
+		return (double) buscarArcoA(pVId).darPesoHaversine();
+	}
+	
+	public double darPesoComparendos(int pVId) {
+		return (double) buscarArcoA(pVId).darPesoComparendos();
 	}
 	
 	public void setInfo(int pId, double plon, double plat)
@@ -88,9 +91,14 @@ public class Vertice implements Comparable<Vertice>
 		lat = plat;
 	}
 	
-	public void setPesoArco(int pIDV, double pPeso)
+	public void setPesoHaversineArco(int pIDV, double pPeso)
 	{
-		buscarArcoA(pIDV).setPeso(pPeso);
+		buscarArcoA(pIDV).setPesoHaversine(pPeso);
+	}
+	
+	public void setPesoComparendosArco(int pIDV, double pPeso)
+	{
+		buscarArcoA(pIDV).setPesoComparendos(pPeso);
 	}
 	
 	public Arco buscarArcoA(int pIDV)
@@ -195,7 +203,7 @@ public class Vertice implements Comparable<Vertice>
 	}
 	
 	public void agregarEstacion(Estacion dato) {
-		estaciones.agregar(dato);
+		estaciones.agregar( (Estacion)dato);
 	}
 }
 

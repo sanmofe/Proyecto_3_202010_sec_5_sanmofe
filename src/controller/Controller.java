@@ -41,7 +41,7 @@ public class Controller {
 			case 1:
 				modelo = new Modelo(); 
 				view.printMessage(modelo.cargarDatosVertices(Modelo.VERTICES));
-				view.printMessage(modelo.cargarDatosComparendos(Modelo.LOSOTROSCOMPARENDOS));
+				view.printMessage(modelo.cargarDatosComparendos(Modelo.MINICOMPARENDOS));
 				view.printMessage(modelo.cargarDatosEstaciones(Modelo.ESTACIONES));
 				view.printMessage(modelo.cargarDatosArcos(Modelo.ARCOS));
 				break;
