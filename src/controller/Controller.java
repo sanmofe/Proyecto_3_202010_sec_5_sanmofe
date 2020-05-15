@@ -40,6 +40,7 @@ public class Controller {
 			switch(option){
 			case 1:
 				modelo = new Modelo(); 
+				view.printMessage(modelo.cargarTodosLosDatos());
 				break;
 			case 2:
 				modelo.hacerUnArchivoJSON();

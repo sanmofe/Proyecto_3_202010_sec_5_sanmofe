@@ -15,8 +15,8 @@ public class View
 		public void printMenu()
 		{
 			System.out.println("1: Cargar la informacion.");
-			System.out.println("2: Requerimiento 2: Consultar un comparendo por id.");
-			System.out.println("3: Requerimiento 3: Consultar los comparendos con un id en un rango específico");
+			System.out.println("2: Crear una copia del grafo en un archivo .json");
+			System.out.println("3: Abrir la ventana de Maps");
 			System.out.println("");
 			}
 

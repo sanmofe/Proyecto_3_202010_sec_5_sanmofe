@@ -3,8 +3,13 @@ package model.data_structures;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import model.logic.Estacion;
+import model.logic.Infraccion;
+
 public class Vertice implements Comparable<Vertice>
 {
+	private ArregloDinamico<Infraccion> infracciones;
+	private ArregloDinamico<Estacion> estaciones;
 	private LinkedList<Arco> edgeTo;
 	private int id;
 	private double lon;
@@ -166,4 +171,29 @@ public class Vertice implements Comparable<Vertice>
 		return id - arg0.darId();
 	}
 	
+	
+	public Iterator<Infraccion> infracciones(){
+		return infracciones.iterator();
+	}
+	
+	public Iterator<Estacion> estaciones(){
+		return estaciones.iterator();
+	}
+	
+	public int numInfracciones() {
+		return infracciones.darTamano();
+	}
+	
+	public int numEstaciones() {
+		return estaciones.darTamano();
+	}
+
+	public void agregarInfraccion(Infraccion dato) {
+		infracciones.agregar(dato);
+	}
+	
+	public void agregarEstacion(Estacion dato) {
+		estaciones.agregar(dato);
+	}
 }
+

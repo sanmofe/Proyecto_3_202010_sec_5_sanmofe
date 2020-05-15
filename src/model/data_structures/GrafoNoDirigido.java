@@ -34,7 +34,7 @@ public class GrafoNoDirigido<K, V> {
 	}
 
 	public double[] getInfoVertex(int idVertex){
-		double aRetornar[] = new double[4];
+		double aRetornar[] = new double[3];
 		aRetornar[0] = ((Vertice) vertices.get(idVertex)).darId();
 		aRetornar[1] = ((Vertice) vertices.get(idVertex)).darLongitud();
 		aRetornar[2] = ((Vertice) vertices.get(idVertex)).darLatitud();

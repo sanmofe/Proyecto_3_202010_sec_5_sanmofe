@@ -7,7 +7,7 @@ public class HTLPGraphs
 	private Integer[] keys;
 	private Vertice[] data;
 
-	
+
 	public HTLPGraphs(int m)
 	{
 		capacidad = m;
@@ -20,22 +20,22 @@ public class HTLPGraphs
 			data[j]= null;
 		}
 	}
-	
+
 	public HTLPGraphs()
 	{
 		capacidad = 11;
 		cantKeys = 0;
 		keys = new Integer[11];
 		data = new Vertice[11];
-		
+
 		for(int j = 0; j<capacidad; j++)
 		{
 			keys[j]= null;
 			data[j]= null;
 		}
-		
+
 	}
-	
+
 	public HTLPGraphs(int pCapacidad, int pCantKeys, Integer[] pLlaves, Vertice[] pData)
 	{
 		capacidad = pCapacidad;
@@ -53,30 +53,22 @@ public class HTLPGraphs
 
 	public void put(int Key, int pId, double pPeso, int pMovId)
 	{
-		if(verificarCapacidadCarga())
+		if(verificarCapacidadCarga()) rehash(capacidad*2);
+		int hash =  hash(Key);
+		int i;
+		for(i = hash;keys[i] != null; i = (i+1)%capacidad)
 		{
-			rehash(capacidad*2);
-		}
-		else
-		{
-			int hash =  hash(Key);
-			int i;
-			for(i = hash;keys[i] != null; i = (i+1)%capacidad)
-			{
-				if(keys[i].equals(Key))
-				{				
-					data[i] = new Vertice((int) Key, pPeso, pMovId);
-					return;
-				}
+			if(keys[i].equals(Key))
+			{				
+				data[i] = new Vertice((int) Key, pPeso, pMovId);
+				return;
 			}
-			keys[i] = (Integer) Key;
-			data[i] = new Vertice((int) Key, pPeso, pMovId);
-			cantKeys++;
-
-
 		}
+		keys[i] = (Integer) Key;
+		data[i] = new Vertice((int) Key, pPeso, pMovId);
+		cantKeys++;
 	}
-	
+
 	public void put(int Key, Vertice value)
 	{
 		if(verificarCapacidadCarga())
@@ -161,9 +153,6 @@ public class HTLPGraphs
 		return false;
 	}
 
-
-
-	@SuppressWarnings("unchecked")
 	public void rehash(int cap)
 	{
 		HTLPGraphs t;
@@ -189,7 +178,7 @@ public class HTLPGraphs
 
 	public Vertice[] darData()
 	{
-		
+
 		return data;
 	}
 
