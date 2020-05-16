@@ -30,7 +30,7 @@ public class ArregloDinamico<T> implements IArregloDinamico<T>, Iterable<T>{
          */
 		public ArregloDinamico( int max )
         {
-               elementos = (T[]) new Comparable[max];
+               elementos = (T[]) new Object[max];
                tamanoMax = max;
                tamanoAct = 0;
         }

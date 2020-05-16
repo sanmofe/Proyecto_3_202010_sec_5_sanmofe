@@ -87,7 +87,7 @@ public class Modelo {
 	public String cargarTodosLosDatos() {
 		return("Datos de vértices: " + cargarDatosVertices(VERTICES) +  "\nDatos de comparendos:\n" + cargarDatosComparendos(MINICOMPARENDOS) + "\nDatos de estaciones:\n" + cargarDatosEstaciones(ESTACIONES) + "\nDatos de arcos:\n" + cargarDatosArcos(ARCOS));
 	}
-	
+
 	/**
 	 * 
 	 * Servicio de consulta de numero de elementos presentes en el modelo 
@@ -103,9 +103,9 @@ public class Modelo {
 			while(lineaActual != null) {
 				String[] partes = lineaActual.split(",");
 				int idVertex = Integer.parseInt(partes[0]);
-//				if(idVertex != 0 && (idVertex % 37501 == 0 || idVertex == 150003)) {
-//					System.out.println("It's rewind time.");
-//				}
+				//				if(idVertex != 0 && (idVertex % 37501 == 0 || idVertex == 150003)) {
+				//					System.out.println("It's rewind time.");
+				//				}
 				double lat = Double.parseDouble(partes[1]);
 				double lon = Double.parseDouble(partes[2]);
 				grafo.addVertex(idVertex, lat, lon);
@@ -132,20 +132,20 @@ public class Modelo {
 			{
 				String[] datosR = linea.split(" ");
 				int idUno = Integer.parseInt(datosR[0]);
-//				while(idUno  % 37501 == 0 || idUno == 150003) {
-//					linea = br.readLine();
-//					datosR = linea.split(" ");
-//					idUno = Integer.parseInt(datosR[0]);
-//				}
+				//				while(idUno  % 37501 == 0 || idUno == 150003) {
+				//					linea = br.readLine();
+				//					datosR = linea.split(" ");
+				//					idUno = Integer.parseInt(datosR[0]);
+				//				}
 				double latUno = grafo.getInfoVertex(idUno)[2];
 				double lonUno = grafo.getInfoVertex(idUno)[1];
 				for(int i = 1; i < datosR.length; i++) {
 					int idDos = Integer.parseInt(datosR[i]);
-//					if(idDos % 37501 == 0 || idDos == 150003) {
-//						double[] debug = grafo.getInfoVertex(idDos);
-//						int debug2 = 1;
-////					continue;
-//					}
+					//					if(idDos % 37501 == 0 || idDos == 150003) {
+					//						double[] debug = grafo.getInfoVertex(idDos);
+					//						int debug2 = 1;
+					////					continue;
+					//					}
 					double lonDos = grafo.getInfoVertex(idDos)[1];
 					double latDos = grafo.getInfoVertex(idDos)[2];
 					double costoHaversine = Haversine.distance(latUno, lonUno, latDos, lonDos);
@@ -164,7 +164,7 @@ public class Modelo {
 			System.out.println(e.getCause());
 			System.out.println(e.getMessage());			
 		}		
-		
+
 		return "Arco con el mayor ID: " + ultimo;
 	}
 
@@ -262,89 +262,135 @@ public class Modelo {
 			System.out.println("Se generï¿½ un error. F");
 			e.printStackTrace();
 		}
-		
+
 		return (mayor.toString() + "\nTotal comparendos: " + conteoInfracciones);
 	}
-	
+
 	public void hacerUnArchivoJSON(){
+		//		try {
+		//			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//			Writer writer = Files.newBufferedWriter(Paths.get(JSON));
+		//			Vertice[] vertices = grafo.darTodos();
+		//			for (Vertice v : vertices) {
+		//				gson.toJson(v, writer);
+		//				Arco[] arcos = v.darArcosD();
+		//				for (Arco a : arcos) {
+		//					gson.toJson(a);
+		//				}
+		//				Iterator<Estacion> estaciones = v.estaciones();
+		//				Estacion e = estaciones.next();
+		//				while(estaciones.hasNext()) {
+		//					gson.toJson(e);
+		//					e = estaciones.next();
+		//				}
+		//				Iterator<Infraccion> infracciones = v.infracciones();
+		//				Infraccion i = infracciones.next();
+		//				while (infracciones.hasNext()){
+		//					gson.toJson(i);
+		//					i = infracciones.next();
+		//				}
+		//			}
+		//			writer.close();
+		//		} catch (IOException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 		try {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			Writer writer = Files.newBufferedWriter(Paths.get(JSON));
 			Vertice[] vertices = grafo.darTodos();
+			File json = new File(JSON);
+			PrintWriter out;
+			out = new PrintWriter( json );
+			int vActual = 0;
+			out.println( "{" );
 			for (Vertice v : vertices) {
-				gson.toJson(v, writer);
+				System.out.println("Imprimiendo vértice: " + v.darId());
+				out.println("    {");
+				out.println("    \"id\":"+v.darId());
+				out.println("    \"latitud\":"+v.darLatitud());
+				out.println("    \"longitud\":"+v.darLongitud());
 				Arco[] arcos = v.darArcosD();
+				int aActual = 0;
+				boolean imprimiAlgo = false;
+				out.println("    \"arcos\": [");
 				for (Arco a : arcos) {
-					gson.toJson(a);
+					out.println("        {");
+					out.println("        \"idOrigen\":"+a.darIdOrigen());
+					out.println("        \"idDestino\":"+a.darIdDestino());
+					out.println("        \"pesoHaversine\":"+a.darPesoHaversine());
+					out.println("        \"pesoComparendos\":"+a.darPesoComparendos());
+					aActual++;
+					imprimiAlgo = true;
+					if(aActual < arcos.length) {
+						out.println("        },");
+					}
+					else {
+						if(imprimiAlgo) {
+							out.println("        }");
+							imprimiAlgo = false;
+						}
+						out.println("    ]");
+					}
 				}
 				Iterator<Estacion> estaciones = v.estaciones();
 				Estacion e = estaciones.next();
+				out.println("    \"estaciones\": [");
 				while(estaciones.hasNext()) {
-					gson.toJson(e);
+					out.println("        {");
+					out.println("        \"objectId\":"+e.getObjectId());
+					out.println("        \"descripcion\":"+e.getDescripcion());
+					out.println("        \"direccion\":"+e.getDireccion());
+					out.println("        \"nombre\":"+e.getNombre());
+					imprimiAlgo = true;
+					if(estaciones.hasNext()) {
+						out.println("        },");
+					}
 					e = estaciones.next();
 				}
+				if(imprimiAlgo) {
+					out.println("        }");
+					imprimiAlgo = false;
+				}
+				out.println("    ]");
+				
 				Iterator<Infraccion> infracciones = v.infracciones();
 				Infraccion i = infracciones.next();
-				while (infracciones.hasNext()){
-					gson.toJson(i);
+				out.println("    \"infracciones\": [");
+				while(infracciones.hasNext()) {
+					out.println("        {");
+					out.println("        \"objectId\":"+i.getObjectId());
+					out.println("        \"fechaHora\":"+i.getFechaHora());
+					out.println("        \"medioDetec\":"+i.getMedioDetec());
+					out.println("        \"claseVehi\":"+i.getClaseVehi());
+					out.println("        \"tipoServi\":"+i.getTipoServi());
+					out.println("        \"infraccion\":"+i.getInfraccion());
+					out.println("        \"descInfrac\":"+i.getDescInfrac());
+					out.println("        \"localidad\":"+i.getLocalidad());
+					imprimiAlgo = true;
+					if(infracciones.hasNext()) {
+						out.println("        },");
+					}
 					i = infracciones.next();
 				}
+				if(imprimiAlgo) {
+					out.println("        }");
+				}
+				out.println("    ]");		
+						
+				vActual++;
+				if(vActual < vertices.length) {
+					out.println("    },");
+				}
+				else {
+					out.println("    }");
+				}
 			}
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			out.println("}");
+			out.close( );
 		}
-//		try {
-//			Vertice[] vertices = grafo.darTodos();
-//			File json = new File(JSON);
-//			if(!json.exists()) json.mkdirs();
-//			PrintWriter out;
-//			out = new PrintWriter( json );
-//			int vActual = 0;
-//			out.println( "{" );
-//			for (Vertice v : vertices) {
-//				out.println("    {");
-//				out.println("    id:"+v.darId());
-//				out.println("    latitud:"+v.darLatitud());
-//				out.println("    longitud:"+v.darLongitud());
-//				Arco[] arcos = v.darArcosD();
-//				int aActual = 0;
-//				out.println("    arcos: {");
-//				for (Arco a : arcos) {
-//					out.println("        {");
-//					out.println("        idOrigen:"+a.darIdOrigen());
-//					out.println("        idDestino:"+a.darIdDestino());
-//					out.println("        pesoHaversine:"+a.darPeso());
-//					aActual++;
-//					if(aActual < arcos.length) {
-//						out.println("        },");
-//					}
-//					else {
-//						out.println("        }");
-//					}
-//				}
-//				Iterator<Estacion> estaciones = v.estaciones();
-//				Estacion actual = estaciones.next();
-//				out.println("    estaciones: {");
-//				while(estaciones.hasNext()) {
-//					out.
-//				}
-//				vActual++;
-//				if(vActual < vertices.length) {
-//					out.println("    },");
-//				}
-//				else {
-//					out.println("    }");
-//				}
-//			}
-//			out.println("}");
-//			out.close( );
-//		}
-//		catch(Exception e) {
-//			System.out.println("Hubo un error al hacer el archivo. F");
-//			System.out.println(e.getMessage());
-//		}
+		catch(Exception e) {
+			System.out.println("Hubo un error al hacer el archivo. F");
+			System.out.println(e.getMessage());
+		}
 	}
 
 	/**
