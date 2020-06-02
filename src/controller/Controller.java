@@ -54,9 +54,13 @@ public class Controller {
 				mapa.initFrame();
 				break;
 			case 4:
-				
+				view.printMessage("Ingrese Latitud");
+				Double lat = lector.nextDouble();
+				view.printMessage("Ingrese longitud");
+				Double lon = lector.nextDouble();
+				view.printMessage("El ID del vértice más cercano es: " + modelo.inicio1(lat, lon) );
 				break;
-				default: 
+			default: 
 				view.printMessage("--------- \n Opcion Invalida !! \n---------");
 				break;
 			}

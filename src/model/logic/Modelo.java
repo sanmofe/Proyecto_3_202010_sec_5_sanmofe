@@ -28,6 +28,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import model.data_structures.Arco;
+import model.data_structures.ArregloDinamico;
 import model.data_structures.GrafoNoDirigido;
 import model.data_structures.RedBlackBST;
 import model.data_structures.Vertice;
@@ -72,6 +73,9 @@ public class Modelo {
 	/**
 	 * El grafo que va a contener... Uh... Todo?
 	 */
+
+	private ArregloDinamico<Infraccion> arreglo;
+
 	private GrafoNoDirigido<Integer, Vertice> grafo;
 	//	private RedBlackBST<String, Infraccion> arbol;
 	/**
@@ -82,6 +86,8 @@ public class Modelo {
 		grafo = new GrafoNoDirigido<>(750000);
 		arbol = new RedBlackBST<Double, Vertice>();
 	}
+
+
 
 
 	public String cargarTodosLosDatos() {
@@ -217,6 +223,7 @@ public class Modelo {
 	}
 
 	public String cargarDatosComparendos(String pRutaArchivo){
+		arreglo = new ArregloDinamico<Infraccion>(1);
 		Infraccion mayor = null;
 		int conteoInfracciones = 0;
 		try {
@@ -228,42 +235,75 @@ public class Modelo {
 				JsonObject elem = jo.getAsJsonObject();
 				Infraccion x = new Infraccion(elem);
 				//AGREGA EN LAS ESTRUCTURAS DE DATOS
+				arreglo.agregar(x);
+
 				if( mayor == null || x.getObjectId() > mayor.getObjectId()) {
 					mayor = x;
 				}
 				conteoInfracciones++;
-				boolean asignado = false;
-				double rango = 0.000001;
-				while(!asignado) {
-					double limMenor = x.getCoordenada().getLongitude() - rango;
-					double limMayor = x.getCoordenada().getLongitude() + rango;
-					Iterator<Vertice> verticesPosibles = arbol.valuesInRange(limMenor, limMayor ).iterator();
-					Vertice v = verticesPosibles.next();
-					if(v == null) {
-						rango *= 2;
-						continue;
-					}
-					double distanciaMinima = 1000000.761;
-					Vertice vertActual = null;
-					while(verticesPosibles.hasNext()) {
-						double distancia = Haversine.distance(x.getCoordenada().getLatitude(), x.getCoordenada().getLongitude(), v.darLatitud(), v.darLongitud());
-						if(distancia < distanciaMinima) {
-							distanciaMinima = distancia;
-							vertActual = v;
-						}
-						v = verticesPosibles.next();
-					}
-					grafo.agregarInfraccionAVertex(v.darId(), x);
-					asignado = true;
-				}
+				//				boolean asignado = false;
+				//				double rango = 0.000001;
+				//				while(!asignado) {
+				//					double limMenor = x.getCoordenada().getLongitude() - rango;
+				//					double limMayor = x.getCoordenada().getLongitude() + rango;
+				//					Iterator<Vertice> verticesPosibles = arbol.valuesInRange(limMenor, limMayor ).iterator();
+				//					Vertice v = verticesPosibles.next();
+				//					if(v == null) {
+				//						rango *= 2;
+				//						continue;
+				//					}
+				//					double distanciaMinima = 1000000.761;
+				//					Vertice vertActual = null;
+				//					while(verticesPosibles.hasNext()) {
+				//						double distancia = Haversine.distance(x.getCoordenada().getLatitude(), x.getCoordenada().getLongitude(), v.darLatitud(), v.darLongitud());
+				//						if(distancia < distanciaMinima) {
+				//							distanciaMinima = distancia;
+				//							vertActual = v;
+				//						}
+				//						v = verticesPosibles.next();
+				//					}
+				//					grafo.agregarInfraccionAVertex(v.darId(), x);
+				//					asignado = true;
+				//				}
+				//			}
+				//		}
 			}
 		}
 		catch (Exception e) {
 			System.out.println("Se generï¿½ un error. F");
 			e.printStackTrace();
 		}
-
+		asignarLosComparendos();
 		return (mayor.toString() + "\nTotal comparendos: " + conteoInfracciones);
+	}
+
+	private void asignarLosComparendos() {
+		for (Infraccion inf : arreglo) {
+			boolean asignado = false;
+			double rango = 0.000001;
+			while(!asignado) {
+				double limMenor = inf.getCoordenada().getLongitude() - rango;
+				double limMayor = inf.getCoordenada().getLongitude() + rango;
+				Iterator<Vertice> verticesPosibles = arbol.valuesInRange(limMenor, limMayor ).iterator();
+				Vertice v = verticesPosibles.next();
+				if(v == null) {
+					rango *= 2;
+					continue;
+				}
+				double distanciaMinima = 1000000.761;
+				Vertice vertActual = null;
+				while(verticesPosibles.hasNext()) {
+					double distancia = Haversine.distance(inf.getCoordenada().getLatitude(), inf.getCoordenada().getLongitude(), v.darLatitud(), v.darLongitud());
+					if(distancia < distanciaMinima) {
+						distanciaMinima = distancia;
+						vertActual = v;
+					}
+					v = verticesPosibles.next();
+				}
+				grafo.agregarInfraccionAVertex(v.darId(), inf);
+				asignado = true;
+			}
+		}
 	}
 
 	public void hacerUnArchivoJSON(){
@@ -351,7 +391,7 @@ public class Modelo {
 					imprimiAlgo = false;
 				}
 				out.println("    ]");
-				
+
 				Iterator<Infraccion> infracciones = v.infracciones();
 				Infraccion i = infracciones.next();
 				out.println("    \"infracciones\": [");
@@ -375,7 +415,7 @@ public class Modelo {
 					out.println("        }");
 				}
 				out.println("    ]");		
-						
+
 				vActual++;
 				if(vActual < vertices.length) {
 					out.println("    },");
@@ -397,7 +437,30 @@ public class Modelo {
 	 * Retorna el id del nodo más cercano basado en su distancia Haversine
 	 */
 	public int inicio1(double lat, double lon) {
-		return 0;
+		Double rangoarr = 0.00001;
+		Iterable<Vertice> vertices = null;
+		while(true) {
+			vertices = arbol.valuesInRange(lat - rangoarr, lat + rangoarr);
+			if(!(vertices.iterator().hasNext())) {
+				rangoarr*=2;
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+		RedBlackBST<Double, Vertice> arbol2 = new RedBlackBST<Double, Vertice>();
+		for(Vertice v: vertices) {
+			arbol2.put(v.darLongitud(), v);
+		}
+		Double rango = 0.000001;
+		while(true) {
+			Iterator<Vertice> noc = arbol2.valuesInRange(lon - rango, lon - rango).iterator();
+			while(noc.hasNext()) {
+				return noc.next().darId();
+			}
+			rango *= 2;
+		}
 	}
 	/**
   	Obtener el camino de costo mínimo entre dos ubicaciones geográficas por distancia

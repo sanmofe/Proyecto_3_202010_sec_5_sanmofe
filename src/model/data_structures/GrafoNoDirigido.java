@@ -171,6 +171,16 @@ public class GrafoNoDirigido<K, V> {
 	}
 
 
+	public ArregloDinamico<Arco> darArcos() {
+		ArregloDinamico<Arco> devuelveme = new ArregloDinamico<Arco>(1);
+		for(Vertice v: darTodos()) {
+			for(Arco a: v.darArcosD()) {
+				devuelveme.agregar(a);
+			}
+		}
+		return devuelveme;
+	}
+	
 	public int cc(){
 		Vertice todos[] = vertices.darData();
 		int cantidad = 0;
@@ -203,7 +213,7 @@ public class GrafoNoDirigido<K, V> {
 		i = dfs(vID, cc, b);
 	}   
 
-	private Vertice getVertex(int id)
+	public Vertice getVertex(int id)
 	{
 		return (Vertice) vertices.get((int) id);
 	}

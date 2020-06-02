@@ -17,7 +17,9 @@ public class View
 			System.out.println("1: Cargar la informacion.");
 			System.out.println("2: Crear una copia del grafo en un archivo .json");
 			System.out.println("3: Abrir la ventana de Maps");
-			System.out.println("");
+			System.out.println("4: Método inicial");
+			System.out.println("5: a1");
+			System.out.println("6: b1");
 			}
 
 		public void printMessage(String mensaje) {
